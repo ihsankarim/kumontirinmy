@@ -1,13 +1,14 @@
 "use client";
 import Button from "@/components/shared/Button";
-import { signIn } from "next-auth/react";
+import { getSession, signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const { data: session, status, update } = useSession();
 
   const handleLogin = async () => {
     const res = await signIn("credentials", {
@@ -16,8 +17,24 @@ export default function LoginPage() {
       redirect: false,
     });
     if (res?.ok) {
-      const sessionRes = await fetch("/api/auth/session");
-      const session = await sessionRes.json();
+      // const sessionRes = await fetch("/api/auth/session");
+      const session = await getSession();
+      const role = session?.user?.role;
+      router.push(
+        role === "ADMIN"
+          ? "/dashboard/admin"
+          : role === "OWNER"
+          ? "/dashboard/owner"
+          : role === "MONTIR"
+          ? "/dashboard/montir"
+          : "/dashboard"
+      );
+      await update();
+      window.location.reload();
+    }
+  };
+  useEffect(() => {
+    if (status === "authenticated") {
       const role = session.user.role;
       router.push(
         role === "ADMIN"
@@ -26,10 +43,10 @@ export default function LoginPage() {
           ? "/dashboard/owner"
           : role === "MONTIR"
           ? "/dashboard/montir"
-          : "/my-booking"
+          : "dashboard"
       );
     }
-  };
+  }, [session, status]);
   return (
     <div className="max-w-md mx-auto mt-20 space-y-4">
       <input

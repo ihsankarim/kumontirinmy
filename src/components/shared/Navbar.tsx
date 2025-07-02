@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
+import { Spin } from "antd";
 
 export default function Navbar() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const role = session?.user?.role;
 
   return (
@@ -13,13 +14,15 @@ export default function Navbar() {
         Kumontirinmy
       </Link>
       <div className="space-x-4">
-        {session ? (
+        {status === "loading" ? (
+          <Spin />
+        ) : session ? (
           <>
             <span className="text-sm text-gray-700">
               {session.user.email} ({role})
             </span>
             <button
-              onClick={() => signOut()}
+              onClick={() => signOut({ callbackUrl: "/login" })}
               className="text-red-500 hover:underline"
             >
               Logout

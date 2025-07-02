@@ -1,12 +1,14 @@
-'use client'
+"use client";
 import Button from "@/components/shared/Button";
 import bcrypt from "bcryptjs";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function RegisterPage() {
   const router = useRouter();
   const [form, setForm] = useState({ email: "", password: "", role: "USER" });
+  const { data: session, status } = useSession();
 
   const handleSubmit = async () => {
     const hashed = await bcrypt.hash(form.password, 10);
@@ -16,6 +18,22 @@ export default function RegisterPage() {
     });
     router.push("/login");
   };
+
+  // auth
+  useEffect(() => {
+    if (status === "authenticated") {
+      const role = session.user.role;
+      router.push(
+        role === "ADMIN"
+          ? "/dashboard/admin"
+          : role === "OWNER"
+          ? "/dashboard/owner"
+          : role === "MONTIR"
+          ? "/dashboard/montir"
+          : "dashboard"
+      );
+    }
+  }, [session, status]);
   return (
     <div className="max-w-md mx-auto mt-20 space-y-4">
       <input
