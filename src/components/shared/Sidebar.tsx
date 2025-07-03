@@ -26,7 +26,7 @@ export default function Sidebar() {
     ],
     USER: [
       { label: "Dashboard", href: "/dashboard" },
-      { label: "Buat Booking", href: "/dashboard/booking/create" },
+      // { label: "Buat Booking", href: "/dashboard/booking/create" },
       { label: "Riwayat booking", href: "/dashboard/booking" },
     ],
   };
