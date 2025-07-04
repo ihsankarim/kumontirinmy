@@ -7,7 +7,7 @@ export default function Sidebar() {
   const { data: session } = useSession();
   const role = session?.user.role;
 
-  const commonLinks = [{ label: "Profil", href: "/dashboard/profile" }];
+  // const commonLinks = [{ label: "Profil", href: "/dashboard/profile" }];
   const roleBasedLinks: Record<string, { label: string; href: string }[]> = {
     ADMIN: [
       { label: "Dashboard", href: "/dashboard/admin" },
@@ -30,7 +30,8 @@ export default function Sidebar() {
       { label: "Riwayat booking", href: "/dashboard/booking" },
     ],
   };
-  const links = [...commonLinks, ...(role ? roleBasedLinks[role] || [] : [])];
+  // const links = [...commonLinks, ...(role ? roleBasedLinks[role] || [] : [])];
+  const links = [...(role ? roleBasedLinks[role] || [] : [])];
   return (
     <aside className="w-48 min-h-dvh bg-white shadow-lg p-4 space-y-2 fixed">
       {/* <h2 className="text-xl font-bold mb-4 text-blue-600">Dashboard</h2> */}

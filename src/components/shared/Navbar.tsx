@@ -1,12 +1,15 @@
-"use client";
+// "use client";
 
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { Spin } from "antd";
+import { useState } from "react";
+import { User } from "lucide-react";
 
 export default function Navbar() {
   const { data: session, status } = useSession();
   const role = session?.user?.role;
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const roleBasedNavLinks: Record<string, { label: string; href: string }[]> = {
     ADMIN: [{ label: "Dashboard", href: "/dashboard/admin" }],
@@ -22,7 +25,7 @@ export default function Navbar() {
       <Link href="/" className="font-bold text-lg text-blue-600">
         Kumontirinmy
       </Link>
-      <div className="space-x-4">
+      <div className="flex items-center space-x-4 relative">
         {status === "loading" ? (
           <Spin />
         ) : session ? (
@@ -36,15 +39,28 @@ export default function Navbar() {
                 {label}
               </Link>
             ))}
-            <span className="text-sm text-gray-700">
-              {session.user.email} ({role})
-            </span>
             <button
-              onClick={() => signOut({ callbackUrl: "/login" })}
-              className="text-red-500 hover:underline"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="relative w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300"
             >
-              Logout
+              <User />
             </button>
+            {dropdownOpen && (
+              <div className="absolute right-0 top-12 w-48 bg-white shadow-lg border rounded z-50">
+                <div className="px-4 py-2 text-sm text-gray-800 border-b">
+                  {session.user.email}
+                </div>
+                <Link
+                  href="dashboard/profile"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Profile
+                </Link>
+                <button className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                  Logout
+                </button>
+              </div>
+            )}
           </>
         ) : (
           <>
