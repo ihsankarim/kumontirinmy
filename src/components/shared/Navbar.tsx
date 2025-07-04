@@ -56,7 +56,13 @@ export default function Navbar() {
                 >
                   Profile
                 </Link>
-                <button className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                <button
+                  onClick={() => {
+                    setDropdownOpen(false);
+                    signOut({ callbackUrl: "/login" });
+                  }}
+                  className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                >
                   Logout
                 </button>
               </div>
