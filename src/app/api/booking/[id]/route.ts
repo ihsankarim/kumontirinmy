@@ -1,8 +1,8 @@
 import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
 export async function GET(
-  _: Request,
+  _: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const booking = await prisma.booking.findUnique({
@@ -21,7 +21,7 @@ export async function GET(
 }
 
 export async function DELETE(
-  _: Request,
+  _: NextRequest,
   { params }: { params: { id: string } }
 ) {
   await prisma.booking.delete({ where: { id: params.id } });
@@ -29,7 +29,7 @@ export async function DELETE(
 }
 
 export async function PATCH(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const { serviceType, date, notes } = await req.json();
